@@ -48,8 +48,13 @@ namespace bibGest.Controllers
         // GET: Livres/Create
         public IActionResult Create()
         {
-            ViewData["CategorieId"] = new SelectList(_context.Categories, "CategorieId", "CategorieId");
-            return View();
+            ViewData["CategorieId"] = new SelectList(_context.Categories, "CategorieId", "NomCategorie");
+            var livre = new Livre
+            {
+                QuantiteTotale = 1,
+                QuantiteDisponible = 1
+            };
+            return View(livre);
         }
 
         // POST: Livres/Create
@@ -57,15 +62,20 @@ namespace bibGest.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("LivreId,Titre,Auteur,Isbn,AnneePublication,Description,ImageUrl,QuantiteTotale,QuantiteDisponible,CategorieId")] Livre livre)
+        public async Task<IActionResult> Create([Bind("Titre,Auteur,Isbn,AnneePublication,Description,ImageUrl,QuantiteTotale,QuantiteDisponible,CategorieId")] Livre livre)
         {
+            // Remove validation errors for navigation properties
+            ModelState.Remove("Categorie");
+            ModelState.Remove("Emprunts");
+            ModelState.Remove("Reservations");
+            
             if (ModelState.IsValid)
             {
                 _context.Add(livre);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategorieId"] = new SelectList(_context.Categories, "CategorieId", "CategorieId", livre.CategorieId);
+            ViewData["CategorieId"] = new SelectList(_context.Categories, "CategorieId", "NomCategorie", livre.CategorieId);
             return View(livre);
         }
 
@@ -82,7 +92,7 @@ namespace bibGest.Controllers
             {
                 return NotFound();
             }
-            ViewData["CategorieId"] = new SelectList(_context.Categories, "CategorieId", "CategorieId", livre.CategorieId);
+            ViewData["CategorieId"] = new SelectList(_context.Categories, "CategorieId", "NomCategorie", livre.CategorieId);
             return View(livre);
         }
 
@@ -97,6 +107,11 @@ namespace bibGest.Controllers
             {
                 return NotFound();
             }
+
+            // Remove validation errors for navigation properties
+            ModelState.Remove("Categorie");
+            ModelState.Remove("Emprunts");
+            ModelState.Remove("Reservations");
 
             if (ModelState.IsValid)
             {
@@ -118,7 +133,7 @@ namespace bibGest.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategorieId"] = new SelectList(_context.Categories, "CategorieId", "CategorieId", livre.CategorieId);
+            ViewData["CategorieId"] = new SelectList(_context.Categories, "CategorieId", "NomCategorie", livre.CategorieId);
             return View(livre);
         }
 

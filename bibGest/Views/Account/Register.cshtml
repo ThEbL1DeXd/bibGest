@@ -1,0 +1,105 @@
+@model bibGest.ViewModels.RegisterViewModel
+@{
+    ViewData["Title"] = "Inscription";
+}
+
+<div class="row justify-content-center" style="min-height: 70vh;">
+    <div class="col-md-6 col-lg-5 d-flex align-items-center">
+        <div class="w-100">
+            <!-- Logo -->
+            <div class="text-center mb-4">
+                <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3" 
+                     style="width: 80px; height: 80px; background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                    <i class="bi bi-person-plus text-white" style="font-size: 2.5rem;"></i>
+                </div>
+                <h3 class="fw-bold">Créer un compte</h3>
+                <p class="text-muted">Rejoignez notre communauté de lecteurs</p>
+            </div>
+            
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-4">
+                    <form asp-action="Register" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Prenom" class="form-label">
+                                    <i class="bi bi-person me-1"></i>Prénom
+                                </label>
+                                <input asp-for="Prenom" class="form-control" placeholder="Votre prénom" autocomplete="given-name" />
+                                <span asp-validation-for="Prenom" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Nom" class="form-label">
+                                    <i class="bi bi-person me-1"></i>Nom
+                                </label>
+                                <input asp-for="Nom" class="form-control" placeholder="Votre nom" autocomplete="family-name" />
+                                <span asp-validation-for="Nom" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">
+                                <i class="bi bi-envelope me-1"></i>Adresse email
+                            </label>
+                            <input asp-for="Email" class="form-control" placeholder="votre@email.com" autocomplete="email" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Telephone" class="form-label">
+                                <i class="bi bi-phone me-1"></i>Téléphone <span class="text-muted">(optionnel)</span>
+                            </label>
+                            <input asp-for="Telephone" class="form-control" placeholder="06 12 34 56 78" autocomplete="tel" />
+                            <span asp-validation-for="Telephone" class="text-danger small"></span>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Password" class="form-label">
+                                    <i class="bi bi-lock me-1"></i>Mot de passe
+                                </label>
+                                <input asp-for="Password" class="form-control" placeholder="••••••••" autocomplete="new-password" />
+                                <span asp-validation-for="Password" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ConfirmPassword" class="form-label">
+                                    <i class="bi bi-lock-fill me-1"></i>Confirmer
+                                </label>
+                                <input asp-for="ConfirmPassword" class="form-control" placeholder="••••••••" autocomplete="new-password" />
+                                <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid mb-3">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="bi bi-rocket-takeoff me-2"></i>Créer mon compte
+                            </button>
+                        </div>
+                        
+                        <p class="text-muted small text-center mb-0">
+                            En créant un compte, vous acceptez nos conditions d'utilisation
+                        </p>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <p class="text-muted">
+                    Déjà un compte ? 
+                    <a asp-action="Login" class="fw-medium text-decoration-none">Se connecter</a>
+                </p>
+            </div>
+            
+            <div class="text-center mt-3">
+                <a asp-controller="Home" asp-action="Index" class="text-muted small text-decoration-none">
+                    <i class="bi bi-arrow-left me-1"></i>Retour à l'accueil
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

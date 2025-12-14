@@ -1,36 +1,60 @@
 ﻿@model bibGest.Models.Reservation
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Nouvelle réservation";
 }
 
-<h1>Create</h1>
-
-<h4>Reservation</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="LivreId" class="control-label"></label>
-                <select asp-for="LivreId" class ="form-control" asp-items="ViewBag.LivreId"></select>
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0"><i class="bi bi-bookmark-plus me-2"></i>Nouvelle réservation</h4>
             </div>
-            <div class="form-group">
-                <label asp-for="UtilisateurId" class="control-label"></label>
-                <select asp-for="UtilisateurId" class ="form-control" asp-items="ViewBag.UtilisateurId"></select>
+            <div class="card-body">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="LivreId" class="form-label"><i class="bi bi-book me-1"></i>Livre *</label>
+                        <select asp-for="LivreId" class="form-select" asp-items="ViewBag.LivreId">
+                            <option value="">-- Sélectionnez un livre --</option>
+                        </select>
+                        <span asp-validation-for="LivreId" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="UtilisateurId" class="form-label"><i class="bi bi-person me-1"></i>Demandeur *</label>
+                        <select asp-for="UtilisateurId" class="form-select" asp-items="ViewBag.UtilisateurId">
+                            <option value="">-- Sélectionnez un utilisateur --</option>
+                        </select>
+                        <span asp-validation-for="UtilisateurId" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="Statut" class="form-label"><i class="bi bi-flag me-1"></i>Statut</label>
+                        <select asp-for="Statut" class="form-select">
+                            <option value="EnAttente">En Attente</option>
+                            <option value="Confirmee">Confirmée</option>
+                            <option value="Annulee">Annulée</option>
+                        </select>
+                        <span asp-validation-for="Statut" class="text-danger"></span>
+                    </div>
+                    
+                    <hr />
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-2"></i>Retour
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-check-lg me-2"></i>Créer
+                        </button>
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <partial name="_ValidationScriptsPartial" />
 }

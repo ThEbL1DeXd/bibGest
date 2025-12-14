@@ -1,4 +1,3 @@
-wwwroot\css\site.css
 wwwroot\favicon.ico
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
@@ -61,7 +60,7 @@ wwwroot\lib\jquery\dist\jquery.slim.js
 wwwroot\lib\jquery\dist\jquery.slim.min.js
 wwwroot\lib\jquery\dist\jquery.slim.min.map
 wwwroot\lib\jquery\LICENSE.txt
-C:\Users\ela35\source\repos\bibGest\bibGest\wwwroot\css\site.css
+wwwroot\css\site.css
 C:\Users\ela35\source\repos\bibGest\bibGest\wwwroot\favicon.ico
 C:\Users\ela35\source\repos\bibGest\bibGest\wwwroot\js\site.js
 C:\Users\ela35\source\repos\bibGest\bibGest\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
@@ -123,3 +122,4 @@ C:\Users\ela35\source\repos\bibGest\bibGest\wwwroot\lib\jquery\dist\jquery.slim.
 C:\Users\ela35\source\repos\bibGest\bibGest\wwwroot\lib\jquery\dist\jquery.slim.min.js
 C:\Users\ela35\source\repos\bibGest\bibGest\wwwroot\lib\jquery\dist\jquery.slim.min.map
 C:\Users\ela35\source\repos\bibGest\bibGest\wwwroot\lib\jquery\LICENSE.txt
+C:\Users\ela35\source\repos\bibGest\bibGest\wwwroot\css\site.css

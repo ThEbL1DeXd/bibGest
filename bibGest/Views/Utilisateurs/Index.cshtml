@@ -1,77 +1,107 @@
 ﻿@model IEnumerable<bibGest.Models.Utilisateur>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Gestion des Utilisateurs";
 }
 
-<h1>Index</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-people me-2"></i>Gestion des Utilisateurs</h2>
+    <a asp-action="Create" class="btn btn-success">
+        <i class="bi bi-person-plus me-2"></i>Ajouter un utilisateur
+    </a>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nom)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Prenom)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MotDePasseHash)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Role)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Telephone)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateInscription)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EstActif)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nom)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Prenom)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MotDePasseHash)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Role)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Telephone)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateInscription)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EstActif)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.UtilisateurId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.UtilisateurId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.UtilisateurId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Utilisateur</th>
+                        <th>Email</th>
+                        <th>Téléphone</th>
+                        <th>Rôle</th>
+                        <th>Inscription</th>
+                        <th>Statut</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" 
+                                         style="width: 40px; height: 40px;">
+                                        @item.Prenom?.Substring(0, 1).ToUpper()@item.Nom?.Substring(0, 1).ToUpper()
+                                    </div>
+                                    <div>
+                                        <strong>@item.Prenom @item.Nom</strong>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <a href="mailto:@item.Email" class="text-decoration-none">
+                                    <i class="bi bi-envelope me-1"></i>@item.Email
+                                </a>
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(item.Telephone))
+                                {
+                                    <i class="bi bi-phone me-1"></i>@item.Telephone
+                                }
+                                else
+                                {
+                                    <span class="text-muted">-</span>
+                                }
+                            </td>
+                            <td>
+                                @switch (item.Role)
+                                {
+                                    case "Administrateur":
+                                        <span class="badge bg-danger"><i class="bi bi-shield-check me-1"></i>Administrateur</span>
+                                        break;
+                                    case "Bibliothecaire":
+                                        <span class="badge bg-primary"><i class="bi bi-person-badge me-1"></i>Bibliothécaire</span>
+                                        break;
+                                    default:
+                                        <span class="badge bg-secondary"><i class="bi bi-person me-1"></i>Membre</span>
+                                        break;
+                                }
+                            </td>
+                            <td>
+                                <small class="text-muted">
+                                    <i class="bi bi-calendar me-1"></i>@item.DateInscription.ToString("dd/MM/yyyy")
+                                </small>
+                            </td>
+                            <td>
+                                @if (item.EstActif)
+                                {
+                                    <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Actif</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary"><i class="bi bi-x-circle me-1"></i>Inactif</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <div class="btn-group btn-group-sm">
+                                    <a asp-action="Details" asp-route-id="@item.UtilisateurId" class="btn btn-outline-info" title="Détails">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@item.UtilisateurId" class="btn btn-outline-primary" title="Modifier">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.UtilisateurId" class="btn btn-outline-danger" title="Supprimer">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

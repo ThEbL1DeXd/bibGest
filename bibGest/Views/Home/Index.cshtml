@@ -1,8 +1,191 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Bienvenue";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<!-- Hero Section -->
+<div class="hero mb-5">
+    <div class="row align-items-center">
+        <div class="col-lg-7">
+            <span class="badge bg-white bg-opacity-25 text-white mb-3 px-3 py-2">
+                <i class="bi bi-stars me-1"></i>Votre bibliothèque numérique
+            </span>
+            <h1 class="display-4 fw-bold mb-3">
+                Découvrez, empruntez et<br>gérez vos lectures
+            </h1>
+            <p class="lead opacity-75 mb-4">
+                BibGest vous permet d'explorer notre catalogue, de réserver vos livres préférés
+                et de suivre vos emprunts en toute simplicité.
+            </p>
+            <div class="d-flex flex-wrap gap-3">
+                <a asp-controller="Catalog" asp-action="Index" class="btn btn-light btn-lg px-4">
+                    <i class="bi bi-search me-2"></i>Explorer le catalogue
+                </a>
+                @if (!User.Identity?.IsAuthenticated == true)
+                {
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-outline-light btn-lg px-4">
+                        <i class="bi bi-person-plus me-2"></i>Créer un compte
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-outline-light btn-lg px-4">
+                        <i class="bi bi-speedometer2 me-2"></i>Mon tableau de bord
+                    </a>
+                }
+            </div>
+        </div>
+        <div class="col-lg-5 text-center d-none d-lg-block">
+            <div class="position-relative">
+                <i class="bi bi-journal-richtext" style="font-size: 12rem; opacity: 0.3;"></i>
+                <div class="position-absolute" style="top: 20%; left: 10%;">
+                    <i class="bi bi-book" style="font-size: 3rem; opacity: 0.5;"></i>
+                </div>
+                <div class="position-absolute" style="bottom: 20%; right: 10%;">
+                    <i class="bi bi-bookmark-star" style="font-size: 2.5rem; opacity: 0.5;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- Stats Section -->
+<div class="row mb-5">
+    <div class="col-6 col-md-3 mb-3">
+        <div class="text-center p-4 bg-white rounded-4 shadow-sm h-100">
+            <div class="display-5 fw-bold text-primary mb-2">1000+</div>
+            <div class="text-muted small fw-medium">Livres disponibles</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3 mb-3">
+        <div class="text-center p-4 bg-white rounded-4 shadow-sm h-100">
+            <div class="display-5 fw-bold text-success mb-2">500+</div>
+            <div class="text-muted small fw-medium">Membres actifs</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3 mb-3">
+        <div class="text-center p-4 bg-white rounded-4 shadow-sm h-100">
+            <div class="display-5 fw-bold text-info mb-2">50+</div>
+            <div class="text-muted small fw-medium">Catégories</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3 mb-3">
+        <div class="text-center p-4 bg-white rounded-4 shadow-sm h-100">
+            <div class="display-5 fw-bold text-warning mb-2">24/7</div>
+            <div class="text-muted small fw-medium">Accès en ligne</div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="mb-5">
+    <div class="text-center mb-5">
+        <h2 class="h3 fw-bold mb-2">Nos services</h2>
+        <p class="text-muted">Tout ce dont vous avez besoin pour une expérience de lecture optimale</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="feature-card card h-100">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon">
+                        <i class="bi bi-collection"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Catalogue riche</h5>
+                    <p class="text-muted mb-0">
+                        Explorez des milliers de livres dans toutes les catégories : romans, sciences, histoire, jeunesse et bien plus encore.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-card card h-100">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon">
+                        <i class="bi bi-bookmark-heart"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Réservation facile</h5>
+                    <p class="text-muted mb-0">
+                        Réservez vos livres préférés en ligne et soyez notifié dès qu'ils sont disponibles pour l'emprunt.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-card card h-100">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon">
+                        <i class="bi bi-graph-up-arrow"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Suivi intelligent</h5>
+                    <p class="text-muted mb-0">
+                        Gérez vos emprunts, consultez votre historique de lecture et ne manquez jamais une date de retour.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- How It Works -->
+<div class="mb-5">
+    <div class="text-center mb-5">
+        <h2 class="h3 fw-bold mb-2">Comment ça marche ?</h2>
+        <p class="text-muted">Trois étapes simples pour commencer</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="d-flex align-items-start">
+                <div class="flex-shrink-0">
+                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold"
+                         style="width: 48px; height: 48px;">1</div>
+                </div>
+                <div class="ms-3">
+                    <h6 class="fw-bold mb-2">Créez votre compte</h6>
+                    <p class="text-muted small mb-0">Inscrivez-vous gratuitement en quelques secondes pour accéder à tous nos services.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="d-flex align-items-start">
+                <div class="flex-shrink-0">
+                    <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center fw-bold"
+                         style="width: 48px; height: 48px;">2</div>
+                </div>
+                <div class="ms-3">
+                    <h6 class="fw-bold mb-2">Parcourez le catalogue</h6>
+                    <p class="text-muted small mb-0">Explorez notre collection et trouvez les livres qui vous intéressent.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="d-flex align-items-start">
+                <div class="flex-shrink-0">
+                    <div class="rounded-circle bg-warning text-white d-flex align-items-center justify-content-center fw-bold"
+                         style="width: 48px; height: 48px;">3</div>
+                </div>
+                <div class="ms-3">
+                    <h6 class="fw-bold mb-2">Empruntez ou réservez</h6>
+                    <p class="text-muted small mb-0">Venez chercher vos livres disponibles ou réservez ceux qui sont empruntés.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CTA Section -->
+@if (!User.Identity?.IsAuthenticated == true)
+{
+    <div class="card bg-gradient border-0 overflow-hidden" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);">
+        <div class="card-body p-5 text-center text-white position-relative">
+            <div class="position-absolute top-0 start-0 w-100 h-100" style="background: url('data:image/svg+xml,...') no-repeat center; opacity: 0.1;"></div>
+            <div class="position-relative">
+                <h3 class="fw-bold mb-3">Prêt à commencer ?</h3>
+                <p class="lead opacity-75 mb-4">Rejoignez notre communauté de lecteurs et accédez à tous nos services gratuitement.</p>
+                <a asp-controller="Account" asp-action="Register" class="btn btn-light btn-lg px-5">
+                    <i class="bi bi-rocket-takeoff me-2"></i>Créer mon compte gratuit
+                </a>
+            </div>
+        </div>
+    </div>
+}

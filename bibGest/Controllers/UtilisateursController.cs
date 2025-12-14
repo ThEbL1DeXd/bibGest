@@ -46,7 +46,13 @@ namespace bibGest.Controllers
         // GET: Utilisateurs/Create
         public IActionResult Create()
         {
-            return View();
+            var utilisateur = new Utilisateur
+            {
+                Role = "Membre",
+                DateInscription = DateTime.Now,
+                EstActif = true
+            };
+            return View(utilisateur);
         }
 
         // POST: Utilisateurs/Create
@@ -54,10 +60,15 @@ namespace bibGest.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UtilisateurId,Nom,Prenom,Email,MotDePasseHash,Role,Telephone,DateInscription,EstActif")] Utilisateur utilisateur)
+        public async Task<IActionResult> Create([Bind("Nom,Prenom,Email,MotDePasseHash,Role,Telephone,EstActif")] Utilisateur utilisateur)
         {
+            // Remove validation errors for navigation properties
+            ModelState.Remove("Emprunts");
+            ModelState.Remove("Reservations");
+            
             if (ModelState.IsValid)
             {
+                utilisateur.DateInscription = DateTime.Now;
                 _context.Add(utilisateur);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -92,6 +103,10 @@ namespace bibGest.Controllers
             {
                 return NotFound();
             }
+
+            // Remove validation errors for navigation properties
+            ModelState.Remove("Emprunts");
+            ModelState.Remove("Reservations");
 
             if (ModelState.IsValid)
             {

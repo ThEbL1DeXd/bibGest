@@ -1,0 +1,286 @@
+@model bibGest.ViewModels.UserDashboardViewModel
+@{
+    ViewData["Title"] = "Mon Espace";
+}
+
+<!-- Welcome Header -->
+<div class="hero mb-4" style="padding: 2rem;">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="fw-bold mb-1">Bonjour, @Model.User.Prenom ! ??</h2>
+            <p class="mb-0 opacity-75">Bienvenue dans votre espace personnel</p>
+        </div>
+        <div class="d-none d-md-block">
+            <div class="avatar avatar-xl bg-white bg-opacity-25 text-white">
+                @Model.User.Prenom?.Substring(0, 1).ToUpper()@Model.User.Nom?.Substring(0, 1).ToUpper()
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="dashboard-stat stat-info">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="display-6 fw-bold">@Model.CurrentLoansCount</div>
+                    <div class="opacity-75">Emprunts en cours</div>
+                </div>
+                <i class="bi bi-book stat-icon"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="dashboard-stat stat-success">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="display-6 fw-bold">@Model.TotalBooksRead</div>
+                    <div class="opacity-75">Livres lus</div>
+                </div>
+                <i class="bi bi-check2-all stat-icon"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="dashboard-stat stat-warning">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="display-6 fw-bold">@Model.ReservationsCount</div>
+                    <div class="opacity-75">Réservations actives</div>
+                </div>
+                <i class="bi bi-bookmark-star stat-icon"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Overdue Alert -->
+@if (Model.OverdueLoans.Any())
+{
+    <div class="alert alert-danger mb-4">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-exclamation-triangle-fill me-3" style="font-size: 1.5rem;"></i>
+            <div>
+                <strong>Attention !</strong> Vous avez <strong>@Model.OverdueLoans.Count</strong> livre(s) en retard. 
+                Veuillez les retourner dès que possible pour éviter des pénalités.
+            </div>
+        </div>
+    </div>
+}
+
+<div class="row g-4">
+    <!-- Current Loans -->
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center bg-white">
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-book text-primary me-2"></i>Mes emprunts en cours
+                </h5>
+                <a asp-action="MyLoans" class="btn btn-sm btn-outline-primary">
+                    Voir tout <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
+            <div class="card-body p-0">
+                @if (Model.CurrentLoans.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Livre</th>
+                                    <th>Emprunté le</th>
+                                    <th>Retour prévu</th>
+                                    <th>Statut</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var loan in Model.CurrentLoans.Take(5))
+                                {
+                                    var isOverdue = loan.DateRetourPrevue < DateTime.Now;
+                                    var daysLeft = (loan.DateRetourPrevue - DateTime.Now).Days;
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                @if (!string.IsNullOrEmpty(loan.Livre?.ImageUrl))
+                                                {
+                                                    <img src="@loan.Livre.ImageUrl" class="rounded me-3" 
+                                                         style="width: 40px; height: 55px; object-fit: cover;" />
+                                                }
+                                                else
+                                                {
+                                                    <div class="bg-light rounded me-3 d-flex align-items-center justify-content-center" 
+                                                         style="width: 40px; height: 55px;">
+                                                        <i class="bi bi-book text-muted"></i>
+                                                    </div>
+                                                }
+                                                <div>
+                                                    <div class="fw-medium">@loan.Livre?.Titre</div>
+                                                    <small class="text-muted">@loan.Livre?.Auteur</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <small>@loan.DateEmprunt.ToString("dd MMM yyyy")</small>
+                                        </td>
+                                        <td>
+                                            <small>@loan.DateRetourPrevue.ToString("dd MMM yyyy")</small>
+                                        </td>
+                                        <td>
+                                            @if (isOverdue)
+                                            {
+                                                <span class="badge bg-danger">
+                                                    <i class="bi bi-exclamation-triangle me-1"></i>@Math.Abs(daysLeft) j. retard
+                                                </span>
+                                            }
+                                            else if (daysLeft <= 3)
+                                            {
+                                                <span class="badge bg-warning">
+                                                    <i class="bi bi-clock me-1"></i>@daysLeft j. restants
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-success">
+                                                    <i class="bi bi-check-circle me-1"></i>@daysLeft j. restants
+                                                </span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="empty-state py-5">
+                        <i class="bi bi-inbox empty-icon"></i>
+                        <h5>Aucun emprunt en cours</h5>
+                        <p class="text-muted">Explorez notre catalogue pour trouver votre prochaine lecture !</p>
+                        <a asp-controller="Catalog" asp-action="Index" class="btn btn-primary">
+                            <i class="bi bi-search me-2"></i>Parcourir le catalogue
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Reading History -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center bg-white">
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-clock-history text-success me-2"></i>Historique de lecture
+                </h5>
+                <a asp-action="ReadingHistory" class="btn btn-sm btn-outline-success">
+                    Voir tout <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
+            <div class="card-body">
+                @if (Model.ReadingHistory.Any())
+                {
+                    <div class="row g-3">
+                        @foreach (var book in Model.ReadingHistory.Take(4))
+                        {
+                            <div class="col-md-3 col-6">
+                                <a asp-controller="Catalog" asp-action="Details" asp-route-id="@book.LivreId" class="text-decoration-none">
+                                    <div class="card book-card h-100">
+                                        @if (!string.IsNullOrEmpty(book.Livre?.ImageUrl))
+                                        {
+                                            <img src="@book.Livre.ImageUrl" class="card-img-top" 
+                                                 style="height: 120px; object-fit: cover;" />
+                                        }
+                                        else
+                                        {
+                                            <div class="bg-light d-flex align-items-center justify-content-center" style="height: 120px;">
+                                                <i class="bi bi-book text-muted" style="font-size: 2rem;"></i>
+                                            </div>
+                                        }
+                                        <div class="card-body p-2">
+                                            <h6 class="card-title small mb-1 text-truncate text-dark">@book.Livre?.Titre</h6>
+                                            <small class="text-muted">@book.Livre?.Auteur</small>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted text-center mb-0 py-3">
+                        <i class="bi bi-journal-x me-2"></i>Aucun livre lu pour le moment
+                    </p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+        <!-- Reservations -->
+        <div class="card mb-4">
+            <div class="card-header bg-white">
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-bookmark text-warning me-2"></i>Mes réservations
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                @if (Model.ActiveReservations.Any())
+                {
+                    <ul class="list-group list-group-flush">
+                        @foreach (var res in Model.ActiveReservations)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                <div>
+                                    <div class="fw-medium">@res.Livre?.Titre</div>
+                                    <small class="text-muted">
+                                        <i class="bi bi-calendar me-1"></i>@res.DateReservation.ToString("dd/MM/yyyy")
+                                    </small>
+                                </div>
+                                <span class="badge bg-warning">En attente</span>
+                            </li>
+                        }
+                    </ul>
+                    <div class="p-3">
+                        <a asp-action="MyReservations" class="btn btn-outline-warning btn-sm w-100">
+                            Gérer mes réservations
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <div class="p-4 text-center">
+                        <i class="bi bi-bookmark-x text-muted" style="font-size: 2rem;"></i>
+                        <p class="text-muted small mt-2 mb-0">Aucune réservation active</p>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-lightning-charge text-primary me-2"></i>Actions rapides
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a asp-controller="Catalog" asp-action="Index" class="btn btn-primary">
+                        <i class="bi bi-search me-2"></i>Parcourir le catalogue
+                    </a>
+                    <a asp-action="MyLoans" class="btn btn-outline-secondary">
+                        <i class="bi bi-list-ul me-2"></i>Tous mes emprunts
+                    </a>
+                    <a asp-action="ReadingHistory" class="btn btn-outline-secondary">
+                        <i class="bi bi-clock-history me-2"></i>Mon historique
+                    </a>
+                    <a asp-controller="Account" asp-action="Profile" class="btn btn-outline-secondary">
+                        <i class="bi bi-person me-2"></i>Mon profil
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

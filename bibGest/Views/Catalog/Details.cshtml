@@ -1,0 +1,177 @@
+@model bibGest.ViewModels.BookDetailsViewModel
+@{
+    ViewData["Title"] = Model.Book.Titre;
+}
+
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Catalog" asp-action="Index">Catalogue</a></li>
+        <li class="breadcrumb-item active">@Model.Book.Titre</li>
+    </ol>
+</nav>
+
+<div class="row g-4">
+    <!-- Book Image -->
+    <div class="col-md-4 col-lg-3">
+        <div class="position-sticky" style="top: 100px;">
+            <div class="card overflow-hidden">
+                @if (!string.IsNullOrEmpty(Model.Book.ImageUrl))
+                {
+                    <img src="@Model.Book.ImageUrl" class="card-img-top" alt="@Model.Book.Titre" 
+                         style="height: 350px; object-fit: cover;" />
+                }
+                else
+                {
+                    <div class="d-flex align-items-center justify-content-center" 
+                         style="height: 350px; background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);">
+                        <i class="bi bi-book text-secondary" style="font-size: 6rem; opacity: 0.5;"></i>
+                    </div>
+                }
+                
+                <!-- Availability Badge -->
+                <div class="card-img-overlay d-flex align-items-start justify-content-end p-3">
+                    @if (Model.Book.QuantiteDisponible > 0)
+                    {
+                        <span class="badge bg-success rounded-pill px-3 py-2">
+                            <i class="bi bi-check-circle me-1"></i>Disponible
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger rounded-pill px-3 py-2">
+                            <i class="bi bi-x-circle me-1"></i>Indisponible
+                        </span>
+                    }
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="d-grid gap-2 mt-3">
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    @if (Model.IsBorrowedByCurrentUser)
+                    {
+                        <div class="alert alert-info mb-0 text-center">
+                            <i class="bi bi-book me-2"></i>Vous avez emprunté ce livre
+                        </div>
+                    }
+                    else if (Model.IsReservedByCurrentUser)
+                    {
+                        <div class="alert alert-warning mb-0 text-center">
+                            <i class="bi bi-bookmark-check me-2"></i>Vous avez réservé ce livre
+                        </div>
+                    }
+                    else if (Model.Book.QuantiteDisponible <= 0)
+                    {
+                        <form asp-controller="Catalog" asp-action="Reserve" asp-route-id="@Model.Book.LivreId" method="post">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-warning btn-lg w-100">
+                                <i class="bi bi-bookmark-plus me-2"></i>Réserver ce livre
+                            </button>
+                        </form>
+                    }
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-primary btn-lg">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Connectez-vous pour emprunter
+                    </a>
+                }
+                
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-2"></i>Retour au catalogue
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Book Details -->
+    <div class="col-md-8 col-lg-9">
+        <div class="card">
+            <div class="card-body p-4">
+                <!-- Category Badge -->
+                @if (Model.Book.Categorie != null)
+                {
+                    <span class="badge bg-primary mb-3">@Model.Book.Categorie.NomCategorie</span>
+                }
+                
+                <!-- Title -->
+                <h1 class="display-6 fw-bold mb-2">@Model.Book.Titre</h1>
+                
+                <!-- Author -->
+                <p class="text-muted mb-4">
+                    <i class="bi bi-person me-1"></i>par <strong>@Model.Book.Auteur</strong>
+                    @if (Model.Book.AnneePublication.HasValue)
+                    {
+                        <span class="mx-2">•</span>
+                        <i class="bi bi-calendar me-1"></i>@Model.Book.AnneePublication
+                    }
+                </p>
+                
+                <!-- Description -->
+                @if (!string.IsNullOrEmpty(Model.Book.Description))
+                {
+                    <div class="mb-4">
+                        <h5 class="fw-bold mb-3">
+                            <i class="bi bi-text-paragraph text-primary me-2"></i>Description
+                        </h5>
+                        <p class="text-muted lh-lg">@Model.Book.Description</p>
+                    </div>
+                }
+                
+                <hr class="my-4" />
+                
+                <!-- Book Info Grid -->
+                <div class="row g-4">
+                    <div class="col-6 col-md-3">
+                        <div class="p-3 bg-light rounded-3 text-center">
+                            <i class="bi bi-upc text-primary d-block mb-2" style="font-size: 1.5rem;"></i>
+                            <small class="text-muted d-block">ISBN</small>
+                            <strong class="small">@Model.Book.Isbn</strong>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="p-3 bg-light rounded-3 text-center">
+                            <i class="bi bi-stack text-success d-block mb-2" style="font-size: 1.5rem;"></i>
+                            <small class="text-muted d-block">Total</small>
+                            <strong>@Model.Book.QuantiteTotale exemplaire(s)</strong>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="p-3 bg-light rounded-3 text-center">
+                            <i class="bi bi-check2-circle text-info d-block mb-2" style="font-size: 1.5rem;"></i>
+                            <small class="text-muted d-block">Disponibles</small>
+                            <strong>@Model.Book.QuantiteDisponible exemplaire(s)</strong>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="p-3 bg-light rounded-3 text-center">
+                            <i class="bi bi-arrow-left-right text-warning d-block mb-2" style="font-size: 1.5rem;"></i>
+                            <small class="text-muted d-block">Empruntés</small>
+                            <strong>@(Model.Book.QuantiteTotale - Model.Book.QuantiteDisponible) exemplaire(s)</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Related Books (Optional) -->
+        @if (Model.Book.Categorie != null)
+        {
+            <div class="card mt-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="bi bi-collection text-primary me-2"></i>Autres livres dans "@Model.Book.Categorie.NomCategorie"
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <a asp-controller="Catalog" asp-action="Index" asp-route-categoryId="@Model.Book.CategorieId" 
+                       class="btn btn-outline-primary">
+                        <i class="bi bi-grid me-2"></i>Voir tous les livres de cette catégorie
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

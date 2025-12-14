@@ -54,7 +54,7 @@ namespace bibGest.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CategorieId,NomCategorie,Description")] Category category)
+        public async Task<IActionResult> Create([Bind("NomCategorie,Description")] Category category)
         {
             if (ModelState.IsValid)
             {

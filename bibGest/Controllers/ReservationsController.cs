@@ -49,9 +49,19 @@ namespace bibGest.Controllers
         // GET: Reservations/Create
         public IActionResult Create()
         {
-            ViewData["LivreId"] = new SelectList(_context.Livres, "LivreId", "LivreId");
-            ViewData["UtilisateurId"] = new SelectList(_context.Utilisateurs, "UtilisateurId", "UtilisateurId");
-            return View();
+            ViewData["LivreId"] = new SelectList(_context.Livres, "LivreId", "Titre");
+            ViewData["UtilisateurId"] = new SelectList(
+                _context.Utilisateurs
+                    .Select(u => new { u.UtilisateurId, NomComplet = u.Nom + " " + u.Prenom })
+                    .ToList(), 
+                "UtilisateurId", 
+                "NomComplet");
+            var reservation = new Reservation
+            {
+                DateReservation = DateTime.Now,
+                Statut = "EnAttente"
+            };
+            return View(reservation);
         }
 
         // POST: Reservations/Create
@@ -59,16 +69,28 @@ namespace bibGest.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ReservationId,LivreId,UtilisateurId,DateReservation,Statut")] Reservation reservation)
+        public async Task<IActionResult> Create([Bind("LivreId,UtilisateurId,Statut")] Reservation reservation)
         {
+            // Remove validation errors for navigation properties
+            ModelState.Remove("Livre");
+            ModelState.Remove("Utilisateur");
+            
             if (ModelState.IsValid)
             {
+                reservation.DateReservation = DateTime.Now;
                 _context.Add(reservation);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LivreId"] = new SelectList(_context.Livres, "LivreId", "LivreId", reservation.LivreId);
-            ViewData["UtilisateurId"] = new SelectList(_context.Utilisateurs, "UtilisateurId", "UtilisateurId", reservation.UtilisateurId);
+            
+            ViewData["LivreId"] = new SelectList(_context.Livres, "LivreId", "Titre", reservation.LivreId);
+            ViewData["UtilisateurId"] = new SelectList(
+                _context.Utilisateurs
+                    .Select(u => new { u.UtilisateurId, NomComplet = u.Nom + " " + u.Prenom })
+                    .ToList(), 
+                "UtilisateurId", 
+                "NomComplet", 
+                reservation.UtilisateurId);
             return View(reservation);
         }
 
@@ -85,8 +107,14 @@ namespace bibGest.Controllers
             {
                 return NotFound();
             }
-            ViewData["LivreId"] = new SelectList(_context.Livres, "LivreId", "LivreId", reservation.LivreId);
-            ViewData["UtilisateurId"] = new SelectList(_context.Utilisateurs, "UtilisateurId", "UtilisateurId", reservation.UtilisateurId);
+            ViewData["LivreId"] = new SelectList(_context.Livres, "LivreId", "Titre", reservation.LivreId);
+            ViewData["UtilisateurId"] = new SelectList(
+                _context.Utilisateurs
+                    .Select(u => new { u.UtilisateurId, NomComplet = u.Nom + " " + u.Prenom })
+                    .ToList(), 
+                "UtilisateurId", 
+                "NomComplet", 
+                reservation.UtilisateurId);
             return View(reservation);
         }
 
@@ -101,6 +129,10 @@ namespace bibGest.Controllers
             {
                 return NotFound();
             }
+
+            // Remove validation errors for navigation properties
+            ModelState.Remove("Livre");
+            ModelState.Remove("Utilisateur");
 
             if (ModelState.IsValid)
             {
@@ -122,8 +154,14 @@ namespace bibGest.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LivreId"] = new SelectList(_context.Livres, "LivreId", "LivreId", reservation.LivreId);
-            ViewData["UtilisateurId"] = new SelectList(_context.Utilisateurs, "UtilisateurId", "UtilisateurId", reservation.UtilisateurId);
+            ViewData["LivreId"] = new SelectList(_context.Livres, "LivreId", "Titre", reservation.LivreId);
+            ViewData["UtilisateurId"] = new SelectList(
+                _context.Utilisateurs
+                    .Select(u => new { u.UtilisateurId, NomComplet = u.Nom + " " + u.Prenom })
+                    .ToList(), 
+                "UtilisateurId", 
+                "NomComplet", 
+                reservation.UtilisateurId);
             return View(reservation);
         }
 

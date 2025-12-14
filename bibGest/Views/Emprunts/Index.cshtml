@@ -1,65 +1,102 @@
 ﻿@model IEnumerable<bibGest.Models.Emprunt>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Gestion des Emprunts";
 }
 
-<h1>Index</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-arrow-left-right me-2"></i>Gestion des Emprunts</h2>
+    <a asp-action="Create" class="btn btn-success">
+        <i class="bi bi-plus-circle me-2"></i>Nouvel emprunt
+    </a>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.DateEmprunt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateRetourPrevue)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateRetourReelle)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Statut)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Livre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Utilisateur)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateEmprunt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateRetourPrevue)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateRetourReelle)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Statut)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Livre.LivreId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Utilisateur.UtilisateurId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.EmpruntId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.EmpruntId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.EmpruntId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Livre</th>
+                        <th>Emprunteur</th>
+                        <th>Date emprunt</th>
+                        <th>Retour prévu</th>
+                        <th>Retour réel</th>
+                        <th>Statut</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        var isOverdue = item.DateRetourReelle == null && item.DateRetourPrevue < DateTime.Now;
+                        var isReturned = item.DateRetourReelle != null;
+                        <tr class="@(isOverdue ? "table-danger" : "")">
+                            <td>
+                                <strong>@item.Livre?.Titre</strong>
+                                <br><small class="text-muted">@item.Livre?.Auteur</small>
+                            </td>
+                            <td>
+                                <i class="bi bi-person me-1"></i>
+                                @item.Utilisateur?.Nom @item.Utilisateur?.Prenom
+                            </td>
+                            <td>
+                                <i class="bi bi-calendar me-1"></i>
+                                @item.DateEmprunt.ToString("dd/MM/yyyy")
+                            </td>
+                            <td>
+                                <i class="bi bi-calendar-event me-1"></i>
+                                @item.DateRetourPrevue.ToString("dd/MM/yyyy")
+                            </td>
+                            <td>
+                                @if (item.DateRetourReelle.HasValue)
+                                {
+                                    <i class="bi bi-calendar-check text-success me-1"></i>
+                                    @item.DateRetourReelle?.ToString("dd/MM/yyyy")
+                                }
+                                else
+                                {
+                                    <span class="text-muted">-</span>
+                                }
+                            </td>
+                            <td>
+                                @if (isReturned)
+                                {
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle me-1"></i>Retourné
+                                    </span>
+                                }
+                                else if (isOverdue)
+                                {
+                                    var daysOverdue = (DateTime.Now - item.DateRetourPrevue).Days;
+                                    <span class="badge bg-danger">
+                                        <i class="bi bi-exclamation-triangle me-1"></i>@daysOverdue j. retard
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-info">
+                                        <i class="bi bi-hourglass-split me-1"></i>En cours
+                                    </span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <div class="btn-group btn-group-sm">
+                                    <a asp-action="Details" asp-route-id="@item.EmpruntId" class="btn btn-outline-info" title="Détails">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@item.EmpruntId" class="btn btn-outline-primary" title="Modifier">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.EmpruntId" class="btn btn-outline-danger" title="Supprimer">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

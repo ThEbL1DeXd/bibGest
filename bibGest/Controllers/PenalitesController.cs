@@ -48,8 +48,23 @@ namespace bibGest.Controllers
         // GET: Penalites/Create
         public IActionResult Create()
         {
-            ViewData["EmpruntId"] = new SelectList(_context.Emprunts, "EmpruntId", "EmpruntId");
-            return View();
+            ViewData["EmpruntId"] = new SelectList(
+                _context.Emprunts
+                    .Include(e => e.Livre)
+                    .Include(e => e.Utilisateur)
+                    .Select(e => new { 
+                        e.EmpruntId, 
+                        Description = e.Livre.Titre + " - " + e.Utilisateur.Nom + " " + e.Utilisateur.Prenom 
+                    })
+                    .ToList(), 
+                "EmpruntId", 
+                "Description");
+            var penalite = new Penalite
+            {
+                DateCreation = DateTime.Now,
+                EstPayee = false
+            };
+            return View(penalite);
         }
 
         // POST: Penalites/Create
@@ -57,15 +72,31 @@ namespace bibGest.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PenaliteId,EmpruntId,Montant,DateCreation,EstPayee")] Penalite penalite)
+        public async Task<IActionResult> Create([Bind("EmpruntId,Montant,EstPayee")] Penalite penalite)
         {
+            // Remove validation errors for navigation properties
+            ModelState.Remove("Emprunt");
+            
             if (ModelState.IsValid)
             {
+                penalite.DateCreation = DateTime.Now;
                 _context.Add(penalite);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EmpruntId"] = new SelectList(_context.Emprunts, "EmpruntId", "EmpruntId", penalite.EmpruntId);
+            
+            ViewData["EmpruntId"] = new SelectList(
+                _context.Emprunts
+                    .Include(e => e.Livre)
+                    .Include(e => e.Utilisateur)
+                    .Select(e => new { 
+                        e.EmpruntId, 
+                        Description = e.Livre.Titre + " - " + e.Utilisateur.Nom + " " + e.Utilisateur.Prenom 
+                    })
+                    .ToList(), 
+                "EmpruntId", 
+                "Description", 
+                penalite.EmpruntId);
             return View(penalite);
         }
 
@@ -82,7 +113,18 @@ namespace bibGest.Controllers
             {
                 return NotFound();
             }
-            ViewData["EmpruntId"] = new SelectList(_context.Emprunts, "EmpruntId", "EmpruntId", penalite.EmpruntId);
+            ViewData["EmpruntId"] = new SelectList(
+                _context.Emprunts
+                    .Include(e => e.Livre)
+                    .Include(e => e.Utilisateur)
+                    .Select(e => new { 
+                        e.EmpruntId, 
+                        Description = e.Livre.Titre + " - " + e.Utilisateur.Nom + " " + e.Utilisateur.Prenom 
+                    })
+                    .ToList(), 
+                "EmpruntId", 
+                "Description", 
+                penalite.EmpruntId);
             return View(penalite);
         }
 
@@ -97,6 +139,9 @@ namespace bibGest.Controllers
             {
                 return NotFound();
             }
+
+            // Remove validation errors for navigation properties
+            ModelState.Remove("Emprunt");
 
             if (ModelState.IsValid)
             {
@@ -118,7 +163,18 @@ namespace bibGest.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EmpruntId"] = new SelectList(_context.Emprunts, "EmpruntId", "EmpruntId", penalite.EmpruntId);
+            ViewData["EmpruntId"] = new SelectList(
+                _context.Emprunts
+                    .Include(e => e.Livre)
+                    .Include(e => e.Utilisateur)
+                    .Select(e => new { 
+                        e.EmpruntId, 
+                        Description = e.Livre.Titre + " - " + e.Utilisateur.Nom + " " + e.Utilisateur.Prenom 
+                    })
+                    .ToList(), 
+                "EmpruntId", 
+                "Description", 
+                penalite.EmpruntId);
             return View(penalite);
         }
 

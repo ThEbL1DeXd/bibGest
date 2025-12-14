@@ -1,74 +1,93 @@
 ﻿@model bibGest.Models.Livre
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Modifier le livre";
 }
 
-<h1>Edit</h1>
-
-<h4>Livre</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="LivreId" />
-            <div class="form-group">
-                <label asp-for="Titre" class="control-label"></label>
-                <input asp-for="Titre" class="form-control" />
-                <span asp-validation-for="Titre" class="text-danger"></span>
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-pencil me-2"></i>Modifier le livre</h4>
             </div>
-            <div class="form-group">
-                <label asp-for="Auteur" class="control-label"></label>
-                <input asp-for="Auteur" class="form-control" />
-                <span asp-validation-for="Auteur" class="text-danger"></span>
+            <div class="card-body">
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                    <input type="hidden" asp-for="LivreId" />
+                    
+                    <div class="row">
+                        <div class="col-md-8 mb-3">
+                            <label asp-for="Titre" class="form-label"><i class="bi bi-book me-1"></i>Titre *</label>
+                            <input asp-for="Titre" class="form-control" placeholder="Titre du livre" autocomplete="off" />
+                            <span asp-validation-for="Titre" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label asp-for="AnneePublication" class="form-label"><i class="bi bi-calendar me-1"></i>Année</label>
+                            <input asp-for="AnneePublication" class="form-control" type="number" placeholder="2024" autocomplete="off" />
+                            <span asp-validation-for="AnneePublication" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Auteur" class="form-label"><i class="bi bi-person me-1"></i>Auteur *</label>
+                            <input asp-for="Auteur" class="form-control" placeholder="Nom de l'auteur" autocomplete="off" />
+                            <span asp-validation-for="Auteur" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Isbn" class="form-label"><i class="bi bi-upc me-1"></i>ISBN *</label>
+                            <input asp-for="Isbn" class="form-control" placeholder="978-3-16-148410-0" autocomplete="off" />
+                            <span asp-validation-for="Isbn" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label"><i class="bi bi-text-paragraph me-1"></i>Description</label>
+                        <textarea asp-for="Description" class="form-control" rows="3" placeholder="Description du livre..." autocomplete="off"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="ImageUrl" class="form-label"><i class="bi bi-image me-1"></i>URL de l'image</label>
+                        <input asp-for="ImageUrl" class="form-control" type="url" placeholder="https://..." autocomplete="off" />
+                        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label asp-for="CategorieId" class="form-label"><i class="bi bi-tag me-1"></i>Catégorie</label>
+                            <select asp-for="CategorieId" class="form-select" asp-items="ViewBag.CategorieId">
+                                <option value="">-- Sélectionnez --</option>
+                            </select>
+                            <span asp-validation-for="CategorieId" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label asp-for="QuantiteTotale" class="form-label"><i class="bi bi-stack me-1"></i>Quantité totale</label>
+                            <input asp-for="QuantiteTotale" class="form-control" type="number" min="1" autocomplete="off" />
+                            <span asp-validation-for="QuantiteTotale" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label asp-for="QuantiteDisponible" class="form-label"><i class="bi bi-check-circle me-1"></i>Disponible</label>
+                            <input asp-for="QuantiteDisponible" class="form-control" type="number" min="0" autocomplete="off" />
+                            <span asp-validation-for="QuantiteDisponible" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <hr />
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-2"></i>Retour
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg me-2"></i>Enregistrer
+                        </button>
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <label asp-for="Isbn" class="control-label"></label>
-                <input asp-for="Isbn" class="form-control" />
-                <span asp-validation-for="Isbn" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AnneePublication" class="control-label"></label>
-                <input asp-for="AnneePublication" class="form-control" />
-                <span asp-validation-for="AnneePublication" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ImageUrl" class="control-label"></label>
-                <input asp-for="ImageUrl" class="form-control" />
-                <span asp-validation-for="ImageUrl" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="QuantiteTotale" class="control-label"></label>
-                <input asp-for="QuantiteTotale" class="form-control" />
-                <span asp-validation-for="QuantiteTotale" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="QuantiteDisponible" class="control-label"></label>
-                <input asp-for="QuantiteDisponible" class="form-control" />
-                <span asp-validation-for="QuantiteDisponible" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CategorieId" class="control-label"></label>
-                <select asp-for="CategorieId" class="form-control" asp-items="ViewBag.CategorieId"></select>
-                <span asp-validation-for="CategorieId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <partial name="_ValidationScriptsPartial" />
 }

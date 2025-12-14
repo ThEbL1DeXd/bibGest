@@ -49,26 +49,67 @@ namespace bibGest.Controllers
         // GET: Emprunts/Create
         public IActionResult Create()
         {
-            ViewData["LivreId"] = new SelectList(_context.Livres, "LivreId", "LivreId");
-            ViewData["UtilisateurId"] = new SelectList(_context.Utilisateurs, "UtilisateurId", "UtilisateurId");
-            return View();
+            ViewData["LivreId"] = new SelectList(_context.Livres, "LivreId", "Titre");
+            ViewData["UtilisateurId"] = new SelectList(
+                _context.Utilisateurs
+                    .Select(u => new { u.UtilisateurId, NomComplet = u.Nom + " " + u.Prenom })
+                    .ToList(), 
+                "UtilisateurId", 
+                "NomComplet");
+            var emprunt = new Emprunt
+            {
+                DateEmprunt = DateTime.Now,
+                DateRetourPrevue = DateTime.Now.AddDays(14),
+                Statut = 0
+            };
+            return View(emprunt);
         }
 
         // POST: Emprunts/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EmpruntId,LivreId,UtilisateurId,DateEmprunt,DateRetourPrevue,DateRetourReelle,Statut")] Emprunt emprunt)
+        public async Task<IActionResult> Create([Bind("LivreId,UtilisateurId,DateRetourPrevue,DateRetourReelle,Statut")] Emprunt emprunt)
         {
+            // Remove validation errors for navigation properties
+            ModelState.Remove("Livre");
+            ModelState.Remove("Utilisateur");
+            ModelState.Remove("Penalites");
+            
+            // Debug: Check what values we received
+            System.Diagnostics.Debug.WriteLine($"LivreId: {emprunt.LivreId}");
+            System.Diagnostics.Debug.WriteLine($"UtilisateurId: {emprunt.UtilisateurId}");
+            System.Diagnostics.Debug.WriteLine($"DateRetourPrevue: {emprunt.DateRetourPrevue}");
+            System.Diagnostics.Debug.WriteLine($"Statut: {emprunt.Statut}");
+            System.Diagnostics.Debug.WriteLine($"ModelState.IsValid: {ModelState.IsValid}");
+            
+            if (!ModelState.IsValid)
+            {
+                foreach (var modelState in ModelState.Values)
+                {
+                    foreach (var error in modelState.Errors)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Error: {error.ErrorMessage}");
+                    }
+                }
+            }
+            
             if (ModelState.IsValid)
             {
+                emprunt.DateEmprunt = DateTime.Now;
                 _context.Add(emprunt);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LivreId"] = new SelectList(_context.Livres, "LivreId", "LivreId", emprunt.LivreId);
-            ViewData["UtilisateurId"] = new SelectList(_context.Utilisateurs, "UtilisateurId", "UtilisateurId", emprunt.UtilisateurId);
+            
+            // If we get here, something went wrong - repopulate dropdowns
+            ViewData["LivreId"] = new SelectList(_context.Livres, "LivreId", "Titre", emprunt.LivreId);
+            ViewData["UtilisateurId"] = new SelectList(
+                _context.Utilisateurs
+                    .Select(u => new { u.UtilisateurId, NomComplet = u.Nom + " " + u.Prenom })
+                    .ToList(), 
+                "UtilisateurId", 
+                "NomComplet", 
+                emprunt.UtilisateurId);
             return View(emprunt);
         }
 
@@ -85,8 +126,14 @@ namespace bibGest.Controllers
             {
                 return NotFound();
             }
-            ViewData["LivreId"] = new SelectList(_context.Livres, "LivreId", "LivreId", emprunt.LivreId);
-            ViewData["UtilisateurId"] = new SelectList(_context.Utilisateurs, "UtilisateurId", "UtilisateurId", emprunt.UtilisateurId);
+            ViewData["LivreId"] = new SelectList(_context.Livres, "LivreId", "Titre", emprunt.LivreId);
+            ViewData["UtilisateurId"] = new SelectList(
+                _context.Utilisateurs
+                    .Select(u => new { u.UtilisateurId, NomComplet = u.Nom + " " + u.Prenom })
+                    .ToList(), 
+                "UtilisateurId", 
+                "NomComplet", 
+                emprunt.UtilisateurId);
             return View(emprunt);
         }
 
@@ -101,6 +148,11 @@ namespace bibGest.Controllers
             {
                 return NotFound();
             }
+
+            // Remove validation errors for navigation properties
+            ModelState.Remove("Livre");
+            ModelState.Remove("Utilisateur");
+            ModelState.Remove("Penalites");
 
             if (ModelState.IsValid)
             {
@@ -122,8 +174,14 @@ namespace bibGest.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LivreId"] = new SelectList(_context.Livres, "LivreId", "LivreId", emprunt.LivreId);
-            ViewData["UtilisateurId"] = new SelectList(_context.Utilisateurs, "UtilisateurId", "UtilisateurId", emprunt.UtilisateurId);
+            ViewData["LivreId"] = new SelectList(_context.Livres, "LivreId", "Titre", emprunt.LivreId);
+            ViewData["UtilisateurId"] = new SelectList(
+                _context.Utilisateurs
+                    .Select(u => new { u.UtilisateurId, NomComplet = u.Nom + " " + u.Prenom })
+                    .ToList(), 
+                "UtilisateurId", 
+                "NomComplet", 
+                emprunt.UtilisateurId);
             return View(emprunt);
         }
 

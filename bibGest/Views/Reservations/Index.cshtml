@@ -1,53 +1,85 @@
 ﻿@model IEnumerable<bibGest.Models.Reservation>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Gestion des Réservations";
 }
 
-<h1>Index</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-bookmark me-2"></i>Gestion des Réservations</h2>
+    <a asp-action="Create" class="btn btn-success">
+        <i class="bi bi-plus-circle me-2"></i>Nouvelle réservation
+    </a>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.DateReservation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Statut)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Livre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Utilisateur)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateReservation)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Statut)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Livre.LivreId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Utilisateur.UtilisateurId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ReservationId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ReservationId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ReservationId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Livre</th>
+                        <th>Demandeur</th>
+                        <th>Date de réservation</th>
+                        <th>Statut</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <strong>@item.Livre?.Titre</strong>
+                                <br><small class="text-muted">@item.Livre?.Auteur</small>
+                            </td>
+                            <td>
+                                <i class="bi bi-person me-1"></i>
+                                @item.Utilisateur?.Nom @item.Utilisateur?.Prenom
+                            </td>
+                            <td>
+                                <i class="bi bi-calendar me-1"></i>
+                                @item.DateReservation.ToString("dd/MM/yyyy HH:mm")
+                            </td>
+                            <td>
+                                @switch (item.Statut)
+                                {
+                                    case "EnAttente":
+                                        <span class="badge bg-warning text-dark">
+                                            <i class="bi bi-hourglass-split me-1"></i>En attente
+                                        </span>
+                                        break;
+                                    case "Confirmee":
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-check-circle me-1"></i>Confirmée
+                                        </span>
+                                        break;
+                                    case "Annulee":
+                                        <span class="badge bg-secondary">
+                                            <i class="bi bi-x-circle me-1"></i>Annulée
+                                        </span>
+                                        break;
+                                    default:
+                                        <span class="badge bg-info">@item.Statut</span>
+                                        break;
+                                }
+                            </td>
+                            <td class="text-end">
+                                <div class="btn-group btn-group-sm">
+                                    <a asp-action="Details" asp-route-id="@item.ReservationId" class="btn btn-outline-info" title="Détails">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@item.ReservationId" class="btn btn-outline-primary" title="Modifier">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.ReservationId" class="btn btn-outline-danger" title="Supprimer">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,57 @@
+@model bibGest.Models.Utilisateur
+@{
+    ViewData["Title"] = "Mon Profil";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-person me-2"></i>Mon Profil</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center mb-4">
+                            <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center" 
+                                 style="width: 150px; height: 150px;">
+                                <i class="bi bi-person-circle text-muted" style="font-size: 5rem;"></i>
+                            </div>
+                            <h5 class="mt-3">@Model.Prenom @Model.Nom</h5>
+                            <span class="badge bg-secondary">@Model.Role</span>
+                        </div>
+                        <div class="col-md-8">
+                            <dl class="row">
+                                <dt class="col-sm-4"><i class="bi bi-envelope me-2"></i>Email</dt>
+                                <dd class="col-sm-8">@Model.Email</dd>
+
+                                <dt class="col-sm-4"><i class="bi bi-phone me-2"></i>Téléphone</dt>
+                                <dd class="col-sm-8">@(Model.Telephone ?? "Non renseigné")</dd>
+
+                                <dt class="col-sm-4"><i class="bi bi-calendar me-2"></i>Inscrit le</dt>
+                                <dd class="col-sm-8">@Model.DateInscription.ToString("dd MMMM yyyy")</dd>
+
+                                <dt class="col-sm-4"><i class="bi bi-check-circle me-2"></i>Statut</dt>
+                                <dd class="col-sm-8">
+                                    @if (Model.EstActif)
+                                    {
+                                        <span class="badge bg-success">Actif</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Inactif</span>
+                                    }
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-2"></i>Retour
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,83 +1,95 @@
 ﻿@model IEnumerable<bibGest.Models.Livre>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Gestion des Livres";
 }
 
-<h1>Index</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-book me-2"></i>Gestion des Livres</h2>
+    <a asp-action="Create" class="btn btn-success">
+        <i class="bi bi-plus-circle me-2"></i>Ajouter un livre
+    </a>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Titre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Auteur)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Isbn)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AnneePublication)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImageUrl)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.QuantiteTotale)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.QuantiteDisponible)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Categorie)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Titre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Auteur)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Isbn)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AnneePublication)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImageUrl)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.QuantiteTotale)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.QuantiteDisponible)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Categorie.CategorieId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.LivreId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.LivreId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.LivreId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Couverture</th>
+                        <th>Titre</th>
+                        <th>Auteur</th>
+                        <th>ISBN</th>
+                        <th>Catégorie</th>
+                        <th>Disponibilité</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td style="width: 80px;">
+                                @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                {
+                                    <img src="@item.ImageUrl" alt="@item.Titre" class="rounded" 
+                                         style="width: 60px; height: 80px; object-fit: cover;" />
+                                }
+                                else
+                                {
+                                    <div class="bg-light rounded d-flex align-items-center justify-content-center" 
+                                         style="width: 60px; height: 80px;">
+                                        <i class="bi bi-book text-muted"></i>
+                                    </div>
+                                }
+                            </td>
+                            <td>
+                                <strong>@item.Titre</strong>
+                                @if (item.AnneePublication.HasValue)
+                                {
+                                    <br><small class="text-muted">(@item.AnneePublication)</small>
+                                }
+                            </td>
+                            <td>@item.Auteur</td>
+                            <td><code>@item.Isbn</code></td>
+                            <td>
+                                @if (item.Categorie != null)
+                                {
+                                    <span class="badge bg-secondary">@item.Categorie.NomCategorie</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.QuantiteDisponible > 0)
+                                {
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle me-1"></i>@item.QuantiteDisponible / @item.QuantiteTotale
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">
+                                        <i class="bi bi-x-circle me-1"></i>Indisponible
+                                    </span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <div class="btn-group btn-group-sm">
+                                    <a asp-action="Details" asp-route-id="@item.LivreId" class="btn btn-outline-info" title="Détails">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@item.LivreId" class="btn btn-outline-primary" title="Modifier">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.LivreId" class="btn btn-outline-danger" title="Supprimer">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

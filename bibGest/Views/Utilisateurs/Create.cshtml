@@ -1,53 +1,83 @@
 ﻿@model bibGest.Models.Utilisateur
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Ajouter un utilisateur";
 }
 
-<h1>Create</h1>
-
-<h4>Utilisateur</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Nom" class="control-label"></label>
-                <input asp-for="Nom" class="form-control" />
-                <span asp-validation-for="Nom" class="text-danger"></span>
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0"><i class="bi bi-person-plus me-2"></i>Ajouter un utilisateur</h4>
             </div>
-            <div class="form-group">
-                <label asp-for="Prenom" class="control-label"></label>
-                <input asp-for="Prenom" class="form-control" />
-                <span asp-validation-for="Prenom" class="text-danger"></span>
+            <div class="card-body">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Nom" class="form-label"><i class="bi bi-person me-1"></i>Nom *</label>
+                            <input asp-for="Nom" class="form-control" placeholder="Nom" autocomplete="family-name" />
+                            <span asp-validation-for="Nom" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Prenom" class="form-label"><i class="bi bi-person me-1"></i>Prénom *</label>
+                            <input asp-for="Prenom" class="form-control" placeholder="Prénom" autocomplete="given-name" />
+                            <span asp-validation-for="Prenom" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label"><i class="bi bi-envelope me-1"></i>Email *</label>
+                        <input asp-for="Email" class="form-control" type="email" placeholder="email@exemple.com" autocomplete="email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="MotDePasseHash" class="form-label"><i class="bi bi-lock me-1"></i>Mot de passe *</label>
+                        <input asp-for="MotDePasseHash" class="form-control" type="password" placeholder="••••••••" autocomplete="new-password" />
+                        <span asp-validation-for="MotDePasseHash" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Telephone" class="form-label"><i class="bi bi-phone me-1"></i>Téléphone</label>
+                            <input asp-for="Telephone" class="form-control" type="tel" placeholder="06 12 34 56 78" autocomplete="tel" />
+                            <span asp-validation-for="Telephone" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Role" class="form-label"><i class="bi bi-shield me-1"></i>Rôle *</label>
+                            <select asp-for="Role" class="form-select">
+                                <option value="Membre">Membre</option>
+                                <option value="Bibliothecaire">Bibliothécaire</option>
+                                <option value="Administrateur">Administrateur</option>
+                            </select>
+                            <span asp-validation-for="Role" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 form-check">
+                        <input class="form-check-input" asp-for="EstActif" />
+                        <label asp-for="EstActif" class="form-check-label">
+                            <i class="bi bi-check-circle me-1"></i>Compte actif
+                        </label>
+                    </div>
+                    
+                    <hr />
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-2"></i>Retour
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-check-lg me-2"></i>Créer
+                        </button>
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MotDePasseHash" class="control-label"></label>
-                <input asp-for="MotDePasseHash" class="form-control" />
-                <span asp-validation-for="MotDePasseHash" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Telephone" class="control-label"></label>
-                <input asp-for="Telephone" class="form-control" />
-                <span asp-validation-for="Telephone" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <partial name="_ValidationScriptsPartial" />
 }

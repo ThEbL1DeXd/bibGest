@@ -1,0 +1,78 @@
+@model IEnumerable<bibGest.Models.Emprunt>
+@{
+    ViewData["Title"] = "Mes Emprunts";
+}
+
+<div class="container">
+    <h2 class="mb-4"><i class="bi bi-book me-2"></i>Mes emprunts en cours</h2>
+
+    @if (Model.Any())
+    {
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Livre</th>
+                                <th>Auteur</th>
+                                <th>Date d'emprunt</th>
+                                <th>Retour prévu</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var loan in Model)
+                            {
+                                var isOverdue = loan.DateRetourPrevue < DateTime.Now;
+                                var daysLeft = (loan.DateRetourPrevue - DateTime.Now).Days;
+                                <tr class="@(isOverdue ? "table-danger" : "")">
+                                    <td>
+                                        <strong>@loan.Livre?.Titre</strong>
+                                    </td>
+                                    <td>@loan.Livre?.Auteur</td>
+                                    <td>@loan.DateEmprunt.ToString("dd/MM/yyyy")</td>
+                                    <td>@loan.DateRetourPrevue.ToString("dd/MM/yyyy")</td>
+                                    <td>
+                                        @if (isOverdue)
+                                        {
+                                            var daysOverdue = Math.Abs(daysLeft);
+                                            <span class="badge bg-danger">
+                                                <i class="bi bi-exclamation-triangle me-1"></i>
+                                                @daysOverdue jour(s) de retard
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-clock me-1"></i>
+                                                @daysLeft jour(s) restant(s)
+                                            </span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-inbox text-muted" style="font-size: 4rem;"></i>
+            <h4 class="mt-3">Aucun emprunt en cours</h4>
+            <p class="text-muted">Vous n'avez pas de livre emprunté actuellement</p>
+            <a asp-controller="Catalog" asp-action="Index" class="btn btn-primary">
+                <i class="bi bi-search me-2"></i>Parcourir le catalogue
+            </a>
+        </div>
+    }
+
+    <div class="mt-4">
+        <a asp-action="Member" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Retour au tableau de bord
+        </a>
+    </div>
+</div>

@@ -1,5 +1,7 @@
-using bibGest.Data; // <--- AJOUT 1 : Import du namespace de vos données
-using Microsoft.EntityFrameworkCore; // <--- AJOUT 2 : Import pour SQL Server
+using bibGest.Data;
+using bibGest.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,35 @@ builder.Services.AddDbContext<BibliothequeContext>(options =>
     options.UseSqlServer(connectionString));
 // ==================================================================
 
+// Authentication Configuration
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login";
+        options.LogoutPath = "/Account/Logout";
+        options.AccessDeniedPath = "/Account/AccessDenied";
+        options.ExpireTimeSpan = TimeSpan.FromHours(24);
+    });
+
+// Authorization Policies
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Administrateur"));
+    options.AddPolicy("BibliothecaireOrAdmin", policy => policy.RequireRole("Bibliothecaire", "Administrateur"));
+    options.AddPolicy("MemberOnly", policy => policy.RequireRole("Membre"));
+});
+
+// Register Services
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+// Session support
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -30,7 +61,9 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
+app.UseSession();
 
 app.MapStaticAssets();
 
