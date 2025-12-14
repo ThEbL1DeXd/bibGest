@@ -1,0 +1,54 @@
+﻿@model bibGest.Models.Emprunt
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Emprunt</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DateEmprunt)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DateEmprunt)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DateRetourPrevue)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DateRetourPrevue)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DateRetourReelle)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DateRetourReelle)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Statut)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Statut)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Livre)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Livre.LivreId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Utilisateur)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Utilisateur.UtilisateurId)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.EmpruntId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
